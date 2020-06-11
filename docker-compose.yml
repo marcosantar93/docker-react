@@ -1,0 +1,24 @@
+version: '3'
+services:
+    web:
+        stdin_open: true
+        build: 
+            # Our Dockerfile doesn't comly with the standard, we need some tweaks
+            context: .
+            dockerfile: Dockerfile.dev
+        ports: 
+            - '3000:3000'
+        volumes:
+            # DO NOT try to map an outside folder against this folder
+            - /app/node_modules
+            # Map the current outside folder against the 'app' folder
+            - .:/app
+    tests:
+        build: 
+            context: .
+            dockerfile: Dockerfile.dev
+        volumes:
+            - /app/node_modules
+            - .:/app
+        # Override the Dockerfile default command
+        command: ['npm', 'run', 'test']
